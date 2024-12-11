@@ -1,0 +1,258 @@
+namespace ca.mcgill.ecse.divesafe.model;
+
+use DiveSafePersistence.ump;
+use DiveSafeStateMachine.ump;
+
+class DiveSafe {
+  Date startDate;
+  Integer numDays;
+  Integer priceOfGuidePerDay;
+  1 <@>- 0..1 Administrator administrator;
+  1 <@>- * Guide guides;
+  1 <@>- * Member members;
+  1 <@>- * ItemBooking itemBookings;
+  1 <@>- * Equipment equipments;
+  1 <@>- * EquipmentBundle bundles;
+  1 <@>- * BundleItem bundleItems;
+  1 <@>- * Hotel hotels;
+  1 <@>- * Assignment assignments;
+}
+
+class User {
+  abstract;
+  unique email;
+  // In general, passwords must not be stored as plaintext strings for security reasons. We will do this for simplicity. 
+  password;
+}
+
+class Administrator {
+  isA User;
+}
+
+class NamedUser {
+  abstract;
+  isA User;
+  name;
+  emergencyContact;
+}
+
+class Guide {
+  isA NamedUser;
+  
+  public static Guide getWithEmail(String email) {
+    if (User.getWithEmail(email) instanceof Guide guide) {
+      return guide;
+    }
+    return null;
+  }
+  
+  public static boolean hasWithEmail(String email) {
+    return getWithEmail(email) != null;
+  }
+  
+  public int remainingDays() {
+	  int remaining = diveSafe.getNumDays();
+	  for (Assignment assignment : this.getAssignments()) {
+		  remaining -= assignment.getEndDay() - assignment.getStartDay() + 1;
+	  }
+	  return remaining;
+  }
+}
+
+class Member {
+  isA NamedUser;
+  Integer numDays;
+  Boolean guideRequired;
+  Boolean hotelRequired;
+  
+  public static Member getWithEmail(String email) {
+    if (User.getWithEmail(email) instanceof Member member) {
+      return member;
+    }
+    return null;
+  }
+  
+  public static boolean hasWithEmail(String email) {
+    return getWithEmail(email) != null;
+  }
+}
+
+associationClass ItemBooking {
+  Integer quantity;
+  * Member member;
+  * Item item;
+}
+
+class Item {
+  abstract;
+  unique name;
+}
+
+class Equipment {
+  isA Item;
+  Integer weight;
+  Integer pricePerDay;
+  
+  public static Equipment getWithName(String name) {
+    if (Item.getWithName(name) instanceof Equipment equipment) {
+      return equipment;
+    }
+    return null;
+  }
+  
+  public static boolean hasWithName(String name) {
+    return getWithName(name) != null;
+  }
+}
+
+class EquipmentBundle {
+  isA Item;
+  Integer discount;
+  
+  public static EquipmentBundle getWithName(String name) {
+    if (Item.getWithName(name) instanceof EquipmentBundle bundle) {
+      return bundle;
+   	}
+   	return null;
+  }
+  
+  public static boolean hasWithName(String name) {
+    return getWithName(name) != null;
+  }
+}
+
+associationClass BundleItem {
+  Integer quantity;
+  * EquipmentBundle bundle;
+  * Equipment equipment;
+}
+
+class Hotel {
+  enum HotelType { Villa, Resort, Hostel }
+  unique name;
+  address;
+  Integer rating;
+  HotelType type;
+} 
+
+class Assignment {
+  defaulted String code=null;
+  Integer startDay;
+  Integer endDay;
+  0..1 -- 1 Member member;
+  * -- 0..1 Guide guide;
+  * -- 0..1 Hotel hotel;
+}
+
+// Used only for visualizing enumeration in Umple
+/*
+class HotelType {
+  abstract; // replace with "enum" in photo editor
+  HotelType Villa;
+  HotelType Resort;
+  HotelType Hostel;
+}
+*/
+
+// Generate transfer objects at the very end in another namespace
+use DiveSafeTransferObjects.ump;
+
+
+
+namespace -;
+
+
+class DiveSafe
+{
+  displayColor #9cfaff;
+  position 454 180 217.562 92;
+  position.association Administrator:administrator__DiveSafe 0,32 115,5;
+  position.association DiveSafe__Guide:guides 0,68 76,0;
+  position.association DiveSafe__Equipment:equipments 205,92 0,8;
+  position.association BundleItem:bundleItems__DiveSafe 161,92 2,0;
+  position.association DiveSafe__Hotel:hotels 121,92 101,0;
+  position.association Assignment:assignments__DiveSafe 55,92 85,0;
+  position.association DiveSafe__Member:members 12,92 120,0;
+  position.association ItemBooking:itemBookings__DiveSafe 228,73 24,0;
+  position.association DiveSafe__EquipmentBundle:bundles 218,85 0,18;
+  position.association DiveSafe__ItemBooking:itemBookings 218,44 0,17;
+}
+
+class User
+{
+  position 120 39 138.25 91;
+}
+
+class Administrator
+{
+  position 219 194 114 41;
+}
+
+class NamedUser
+{
+  position 6 180 200.391 91;
+}
+
+class Guide
+{
+  position 40 361 109 41;
+}
+
+class Member
+{
+  position 158 514 183.812 92;
+}
+
+class ItemBooking
+{
+  position 777 185 138.953 58;
+  position.association Item:item__ItemBooking 139,58 0,2;
+  position.association ItemBooking__Member:member 61,58 184,61;
+}
+
+class Item
+{
+  position 973 236 112.406 74;
+}
+
+class Equipment
+{
+  position 765 355 163.719 75;
+}
+
+class EquipmentBundle
+{
+  position 1002 354 140.812 58;
+}
+
+class BundleItem
+{
+  position 682 468 138.953 58;
+  position.association BundleItem__Equipment:equipment 100,0 38,75;
+  position.association BundleItem__EquipmentBundle:bundle 127,31 4,58;
+}
+
+class Hotel
+{
+  position 494 495 129.938 109;
+}
+
+class Assignment
+{
+  position 424 333 140.984 75;
+  position.association Assignment__Guide:guide 0,25 110,38;
+  position.association Assignment__Hotel:hotel 79,75 5,0;
+  position.association Assignment__Member:member 0,72 184,6;
+}
+
+
+namespace -;
+
+/*
+class HotelType
+{
+  displayColor #ffe8fd;
+  position 967 474 143.469 108;
+}
+*/
+//$?[End_of_model]$?

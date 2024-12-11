@@ -1,0 +1,13 @@
+namespace ca.mcgill.ecse.divesafe.controller;
+
+class TOAssignment {
+  memberEmail;
+  memberName;
+  guideEmail;
+  guideName;
+  hotelName;
+  Integer startDay;
+  Integer endDay;
+  Integer totalCostForGuide;
+  Integer totalCostForEquipment;
+}

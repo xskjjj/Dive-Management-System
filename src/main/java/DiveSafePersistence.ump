@@ -1,0 +1,41 @@
+class DiveSafe {  
+  public void reinitialize() {
+    User.reinitializeUniqueEmail(getAdministrator(), getGuides(), getMembers());
+    Item.reinitializeUniqueName(getEquipments(), getBundles());
+    Hotel.reinitializeUniqueName(getHotels());
+  }
+}
+
+class User {
+  public static void reinitializeUniqueEmail(Administrator admin, List<Guide> guides, List<Member> members) {
+    usersByEmail.clear();
+    usersByEmail.put(admin.getEmail(), admin);
+    for (var guide : guides) {
+      usersByEmail.put(guide.getEmail(), guide);
+    }
+    for (var member : members) {
+      usersByEmail.put(member.getEmail(), member);
+    }
+  }
+}
+
+class Item {
+  public static void reinitializeUniqueName(List<Equipment> equipments, List<EquipmentBundle> bundles) {
+    itemsByName.clear();
+    for (var e : equipments) {
+      itemsByName.put(e.getName(), e);
+    }
+    for (var bundle : bundles) {
+      itemsByName.put(bundle.getName(), bundle);
+    }
+  }
+}
+
+class Hotel {
+  public static void reinitializeUniqueName(List<Hotel> hotels) {
+    hotelsByName.clear();
+    for (var hotel : hotels) {
+      hotelsByName.put(hotel.getName(), hotel);
+    }
+  }
+}

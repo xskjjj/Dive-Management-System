@@ -1,0 +1,49 @@
+class Member{
+    banStatus{
+        Available{
+            togglebanStatus() -> Banned;
+        } 
+        Banned{}
+    }
+
+    guideStatus{
+        WithoutGuide{
+            toggleguideStatus() -> WithGuide;
+        }
+        WithGuide{
+            toggleguideStatus() -> WithoutGuide;
+        }
+    }
+    requiredStatus{
+        RequiredGuide{
+            togglerequiredStatus() -> NotRequiredGuide;
+        }
+        NotRequiredGuide{
+            togglerequiredStatus() -> RequiredGuide;
+        }
+    } 
+}
+
+
+class Assignment{
+        PaymentStatus{
+              NotPaid{
+                togglePaymentStatus() -> Paid;
+            }
+            Paid{}
+        }
+           AssignmentStatus{
+            Assigned{
+                toggleToStar() -> Started;
+                toggleToCan() -> Cancelled;
+
+            }
+            Finished{}
+            Started {
+                toggleToCan() -> Cancelled;
+                toggleToFin() -> Finished;
+        }
+          Cancelled{}
+        }
+       }
+    }
